@@ -12,7 +12,7 @@ namespace AsyncCodeGenerator
 {
 	class Program
 	{
-		private const string SourceObjectParameterName = "obj";
+		public const string SourceObjectParameterName = "source";
 
 		static void Main(string[] args)
 		{
@@ -20,14 +20,25 @@ namespace AsyncCodeGenerator
 			//			@"C:\src\I-AS-0114\AttendantConsole\Microsoft.Rtc.Collaboration.Extensions\AsyncExtensions2.cs",
 			//			"Microsoft.Rtc.Collaboration.Extensions", "AsyncExtensions");
 
+			AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
+
 			BuildCode(@"C:\Program Files\Microsoft UCMA 4.0\SDK\Core\Bin\Microsoft.Rtc.Collaboration.dll",
 						@"D:\temp\async\1.cs",
 						"Microsoft.Rtc.Collaboration.Extensions", "AsyncExtensions");
 		}
 
+		static Assembly CurrentDomain_ReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
+		{
+			var assembly = Assembly.ReflectionOnlyLoad(args.Name);
+			return assembly;
+		}
+
 		private static void BuildCode(string sourceAssembly, string outFile, string namespaceName, string className)
 		{
-			var assembly = Assembly.LoadFile(sourceAssembly);
+			var assembly = Assembly.ReflectionOnlyLoadFrom(sourceAssembly);
+
+			var xmlFilePath = Path.ChangeExtension(sourceAssembly, "xml");
+			var docBuilder = new DocumentationBuilder(xmlFilePath);
 
 			var q = from type in assembly.GetTypes()
 					from beginMethod in type.GetMethods(BindingFlags.Instance | BindingFlags.Public)
@@ -43,17 +54,13 @@ namespace AsyncCodeGenerator
 			var targetUnit = new CodeCompileUnit();
 			var ns = new CodeNamespace(namespaceName);
 
-			//ns.Imports.Add(new CodeNamespaceImport("Microsoft.Rtc.Collaboration"));
-
 			targetUnit.Namespaces.Add(ns);
-			
+
 			var classTypeDec = new CodeTypeDeclaration(className);
 			classTypeDec.IsClass = true;
 			classTypeDec.TypeAttributes |= TypeAttributes.Public;
 			classTypeDec.Attributes = MemberAttributes.Public;
-			classTypeDec.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, Environment.NewLine + "\tstatic"));
-			classTypeDec.EndDirectives.Add(new CodeRegionDirective(CodeRegionMode.End, string.Empty));
-			
+
 			ns.Types.Add(classTypeDec);
 
 			int i = 0;
@@ -72,6 +79,9 @@ namespace AsyncCodeGenerator
 				mth.Attributes = MemberAttributes.Public | MemberAttributes.Static;
 				mth.Name = methodName + "Async";
 
+				docBuilder.WriteDocs(mth, methodInfo, endMethod);
+				AddObsoleteAttribute(methodInfo, mth);
+
 				Type returnType;
 				if (endMethod.ReturnType == typeof(void))
 				{
@@ -83,11 +93,6 @@ namespace AsyncCodeGenerator
 				}
 
 				mth.ReturnType = new CodeTypeReference(returnType);
-
-				//foreach (var genericArgument in methodInfo.DeclaringType.GenericTypeArguments)
-				//{
-				//	mth.TypeParameters.Add(new CodeTypeParameter(genericArgument.FullName));
-				//}
 
 				mth.Parameters.Add(new CodeParameterDeclarationExpression("this " + methodInfo.DeclaringType, SourceObjectParameterName));
 				var methodParameters = methodInfo.GetParameters();
@@ -151,24 +156,45 @@ namespace AsyncCodeGenerator
 			}
 
 			var provider = CodeDomProvider.CreateProvider("CSharp");
-			
+
 
 			var options = new CodeGeneratorOptions
 			{
-				BracingStyle = "C", 
+				BracingStyle = "C",
 				BlankLinesBetweenMembers = true
 			};
 
 			using (var sourceWriter = new StreamWriter(outFile))
 			{
-				provider.GenerateCodeFromCompileUnit(new CodeSnippetCompileUnit("#pragma warning disable 618"), sourceWriter, options);
+				//provider.GenerateCodeFromCompileUnit(new CodeSnippetCompileUnit("#pragma warning disable 618"), sourceWriter, options);
 				provider.GenerateCodeFromCompileUnit(targetUnit, sourceWriter, options);
-				provider.GenerateCodeFromCompileUnit(new CodeSnippetCompileUnit("#pragma warning restore 618"), sourceWriter, options);
+				//provider.GenerateCodeFromCompileUnit(new CodeSnippetCompileUnit("#pragma warning restore 618"), sourceWriter, options);
 			}
 
-			Console.WriteLine(i.ToString(CultureInfo.InvariantCulture));
-			Console.ReadKey();
+			MakeClassStatic(outFile, className);
 
+			Console.WriteLine(i.ToString(CultureInfo.InvariantCulture));
+			//Console.ReadKey();
+
+		}
+
+		private static void AddObsoleteAttribute(MethodInfo beginMethodInfo, CodeMemberMethod resultMethod)
+		{
+			var attributes = beginMethodInfo.GetCustomAttributesData();
+			var obsoleteAttr = attributes.FirstOrDefault(a => a.AttributeType == typeof(ObsoleteAttribute));
+
+			if (obsoleteAttr != null)
+			{
+				resultMethod.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(ObsoleteAttribute)),
+					new CodeAttributeArgument(new CodePrimitiveExpression(obsoleteAttr.ConstructorArguments[0].Value))));
+			}
+		}
+
+		private static void MakeClassStatic(string fileName, string className)
+		{
+			var content = File.ReadAllText(fileName);
+			content = content.Replace("class " + className, "static class " + className);
+			File.WriteAllText(fileName, content);
 		}
 	}
 }
