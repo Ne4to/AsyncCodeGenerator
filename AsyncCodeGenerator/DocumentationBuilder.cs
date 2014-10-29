@@ -46,7 +46,7 @@ namespace AsyncCodeGenerator
 
 		private void WriteParams(CodeMemberMethod asyncMethod, MethodInfo beginMethod, XElement originalMethodNode)
 		{			
-			WriteParam(asyncMethod, Program.SourceObjectParameterName, "The source object");
+			WriteParam(asyncMethod, Constants.SourceObjectParameterName, "The source object");
 
 			if (originalMethodNode == null)
 				return;
