@@ -33,6 +33,7 @@ namespace AsyncCodeGenerator
 			var xmlFilePath = parameters.DocFile;
 
 			var assembly = Assembly.ReflectionOnlyLoadFrom(sourceAssembly);
+			//var assembly = Assembly.LoadFile(sourceAssembly);
 			
 			DocumentationBuilder docBuilder = null;
 			if (parameters.WriteDoc && File.Exists(xmlFilePath))

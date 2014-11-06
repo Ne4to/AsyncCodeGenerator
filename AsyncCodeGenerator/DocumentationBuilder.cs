@@ -39,13 +39,13 @@ namespace AsyncCodeGenerator
 			WriteParams(asyncMethod, beginMethod, beginMethodNode);
 			WriteNode(asyncMethod, beginMethodNode, "remarks");
 			WriteNode(asyncMethod, endMethodNode, "returns");
-			
+
 			WriteExceptions(asyncMethod, beginMethodNode);
 			WriteExceptions(asyncMethod, endMethodNode);
 		}
 
 		private void WriteParams(CodeMemberMethod asyncMethod, MethodInfo beginMethod, XElement originalMethodNode)
-		{			
+		{
 			WriteParam(asyncMethod, Constants.SourceObjectParameterName, "The source object");
 
 			if (originalMethodNode == null)
@@ -55,7 +55,7 @@ namespace AsyncCodeGenerator
 			if (methodParameters.Length > 2)
 			{
 				foreach (var parameterInfo in methodParameters.Take(methodParameters.Length - 2))
-				{					
+				{
 					var paramNode = originalMethodNode.Elements("param").FirstOrDefault(p => p.Attribute("name").Value == parameterInfo.Name);
 					if (paramNode != null)
 					{
@@ -81,7 +81,14 @@ namespace AsyncCodeGenerator
 			if (summaryNode != null)
 			{
 				asyncMethod.Comments.Add(new CodeCommentStatement(String.Format("<{0}>", elementName), true));
-				asyncMethod.Comments.Add(new CodeCommentStatement(summaryNode.Value.Trim(), true));
+
+				var rows = summaryNode.Value.Trim().Split(new[] { Environment.NewLine, "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+				for (int rowIndex = 0; rowIndex < rows.Length; rowIndex++)
+				{
+					var row = rows[rowIndex].Trim();
+					asyncMethod.Comments.Add(new CodeCommentStatement(row, true));
+				}
+
 				asyncMethod.Comments.Add(new CodeCommentStatement(String.Format("</{0}>", elementName), true));
 			}
 		}
