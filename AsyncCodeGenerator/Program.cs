@@ -11,6 +11,8 @@ namespace AsyncCodeGenerator
 	// "C:\Program Files (x86)\Microsoft Office 2013\LyncSDK\Assemblies\Silverlight\Microsoft.Lync.Model.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\1.cs"
 	// "C:\Program Files\Microsoft UCMA 4.0\SDK\Core\Bin\Microsoft.Rtc.Collaboration.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\1.cs"
 
+	//"C:\Program Files (x86)\Microsoft Office 2013\LyncSDK\Assemblies\Desktop\Microsoft.Lync.Model.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\desktop.cs"
+
 	class Program
 	{
 		private const int HelpHeaderWidth = 28;
@@ -49,7 +51,7 @@ namespace AsyncCodeGenerator
 			Console.WriteLine("NamespaceName: {0}", parameters.NamespaceName);
 			Console.WriteLine("ClassName: {0}", parameters.ClassName);
 
-			//AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 			AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
 
 			var generator = new Generator(parameters);
@@ -108,6 +110,9 @@ namespace AsyncCodeGenerator
 			}
 			catch (FileNotFoundException)
 			{
+				if (args.RequestingAssembly == null)
+					return null;
+
 				var dirName = Path.GetDirectoryName(args.RequestingAssembly.Location);
 				var assemblyName = new AssemblyName(args.Name);
 				var fileName = String.Format("{0}.dll", assemblyName.Name);
