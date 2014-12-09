@@ -67,57 +67,23 @@ namespace AsyncCodeGenerator
 
 			ns.Types.Add(classTypeDec);
 
-			foreach (var methodInfo in q)
+			foreach (var beginMethod in q)
 			{
-				var methodName = methodInfo.Name.Substring("Begin".Length);
+				var methodName = beginMethod.Name.Substring("Begin".Length);
 				var endMethodName = "End" + methodName;
 
 				// ReSharper disable once PossibleNullReferenceException
-				var endMethod = methodInfo.DeclaringType.GetMethod(endMethodName);
+				var endMethod = beginMethod.DeclaringType.GetMethod(endMethodName);
 				if (endMethod == null)
 					continue;
 
-				//var mth = new CodeMemberMethod();
-				//// ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
-				//mth.Attributes = MemberAttributes.Public | MemberAttributes.Static;
-				//mth.Name = methodName + "Async";
-
-				//if (docBuilder != null)
-				//{
-				//	docBuilder.WriteDocs(mth, methodInfo, endMethod);
-				//}
-				//AddObsoleteAttribute(methodInfo, mth);
-
-				//Type returnType;
-				//if (endMethod.ReturnType == typeof(void))
-				//{
-				//	returnType = typeof(Task);
-				//}
-				//else
-				//{
-				//	returnType = typeof(Task<>).MakeGenericType(endMethod.ReturnType);
-				//}
-
-				//mth.ReturnType = new CodeTypeReference(returnType);
-
-				//mth.Parameters.Add(new CodeParameterDeclarationExpression("this " + methodInfo.DeclaringType,
-				//	Constants.SourceObjectParameterName));
-				//var methodParameters = methodInfo.GetParameters();
-				//if (methodParameters.Length > 2)
-				//{
-				//	foreach (var parameterInfo in methodParameters.Take(methodParameters.Length - 2))
-				//	{
-				//		mth.Parameters.Add(new CodeParameterDeclarationExpression(parameterInfo.ParameterType, parameterInfo.Name));
-				//	}
-				//}
-
-				var mth = CreateExtensionMethod(methodName, endMethod, methodInfo);
+				var mth = CreateExtensionMethod(methodName, endMethod, beginMethod);
 
 				if (docBuilder != null)
 				{
-					docBuilder.WriteDocs(mth, methodInfo, endMethod);
+					docBuilder.WriteDocs(mth, beginMethod, endMethod);
 				}
-				AddObsoleteAttribute(methodInfo, mth);
+				AddObsoleteAttribute(beginMethod, mth);
 
 				var throwException =
 					new CodeThrowExceptionStatement(
@@ -134,13 +100,14 @@ namespace AsyncCodeGenerator
 					new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(GetFactoryTaskType(endMethod)), "Factory");
 				var beginMethodExpr =
 					new CodeFieldReferenceExpression(new CodeArgumentReferenceExpression(Constants.SourceObjectParameterName),
-						methodInfo.Name);
+						beginMethod.Name);
 				var endMethodExpr =
 					new CodeFieldReferenceExpression(new CodeArgumentReferenceExpression(Constants.SourceObjectParameterName),
 						endMethodName);
 
 				if (endMethod.GetParameters().Any(p => p.IsOut))
 				{
+					// ReSharper disable once PossibleNullReferenceException
 					var resultTypeName = endMethod.DeclaringType.Name + methodName + "Result";
 
 					if (ns.Types.Cast<CodeTypeDeclaration>().All(t => t.Name != resultTypeName))
@@ -151,7 +118,7 @@ namespace AsyncCodeGenerator
 
 					DeclareTempVariables(endMethod, mth);
 					var factoryMethodParameters = new List<CodeExpression>();
-					var beginInvocation = GetBeginInvokeExpression(methodInfo);
+					var beginInvocation = GetBeginInvokeExpression(beginMethod);
 					factoryMethodParameters.Add(beginInvocation);
 
 					var endMethodParameters = new List<CodeExpression>();
@@ -183,7 +150,7 @@ namespace AsyncCodeGenerator
 				}
 				else
 				{
-					var methodParameters = methodInfo.GetParameters();
+					var methodParameters = beginMethod.GetParameters();
 					var factoryMethodParameters = new List<CodeExpression>();
 					if (methodParameters.Length > 5)
 					{
@@ -197,7 +164,7 @@ namespace AsyncCodeGenerator
 
 						var beginInvocation =
 							new CodeMethodInvokeExpression(new CodeArgumentReferenceExpression(Constants.SourceObjectParameterName),
-								methodInfo.Name, beginInvocationMethodParameters.ToArray());
+								beginMethod.Name, beginInvocationMethodParameters.ToArray());
 
 						factoryMethodParameters.Add(beginInvocation);
 						factoryMethodParameters.Add(endMethodExpr);
@@ -253,6 +220,7 @@ namespace AsyncCodeGenerator
 		private static CodeMemberMethod CreateExtensionMethod(string methodName, MethodInfo endMethod, MethodInfo beginMethod)
 		{
 			var method = new CodeMemberMethod();
+			// ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
 			method.Attributes = MemberAttributes.Public | MemberAttributes.Static;
 			method.Name = methodName + "Async";
 			method.ReturnType = GetExtensionMethodReturnType(endMethod);
@@ -276,6 +244,7 @@ namespace AsyncCodeGenerator
 			if (endMethod.GetParameters().Any(p => p.IsOut))
 			{
 				var methodName = endMethod.Name.Substring("End".Length);
+				// ReSharper disable once PossibleNullReferenceException
 				var resultTypeName = endMethod.DeclaringType.Name + methodName + "Result";
 				return new CodeTypeReference(String.Format("async System.Threading.Tasks.Task<{0}>", resultTypeName));
 			}
@@ -338,6 +307,7 @@ namespace AsyncCodeGenerator
 
 					var field = new CodeMemberField
 					{
+						// ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
 						Attributes = MemberAttributes.Public | MemberAttributes.Final,
 						Name = parameterInfo.Name,
 						Type = new CodeTypeReference(t),

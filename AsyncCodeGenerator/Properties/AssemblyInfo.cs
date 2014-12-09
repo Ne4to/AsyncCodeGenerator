@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("AsyncCodeGenerator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The application generates Task based extension methods from BeginXxx-EndXxx async pattern.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AsyncCodeGenerator")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("Async code generator")]
+[assembly: AssemblyCopyright("Copyright © Alexey Sosnin 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

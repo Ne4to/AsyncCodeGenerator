@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,12 +6,6 @@ using Microsoft.Win32;
 
 namespace AsyncCodeGenerator
 {
-	// "C:\Program Files (x86)\Microsoft Office 2013\LyncSDK\Assemblies\Desktop\Microsoft.Lync.Model.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\1.cs"
-	// "C:\Program Files (x86)\Microsoft Office 2013\LyncSDK\Assemblies\Silverlight\Microsoft.Lync.Model.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\1.cs"
-	// "C:\Program Files\Microsoft UCMA 4.0\SDK\Core\Bin\Microsoft.Rtc.Collaboration.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\1.cs"
-
-	//"C:\Program Files (x86)\Microsoft Office 2013\LyncSDK\Assemblies\Desktop\Microsoft.Lync.Model.dll" /out:"D:\document\Visual Studio 2013\Projects\AsyncGeneratorTest\desktop.cs"
-
 	class Program
 	{
 		private const int HelpHeaderWidth = 28;
@@ -56,13 +49,6 @@ namespace AsyncCodeGenerator
 
 			var generator = new Generator(parameters);
 			generator.Build();
-			//BuildCode(@"C:\src\I-AS-0114\AttendantConsole\Libs\UCMA 4.0\Microsoft.Rtc.Collaboration.dll",
-			//			@"C:\src\I-AS-0114\AttendantConsole\Microsoft.Rtc.Collaboration.Extensions\AsyncExtensions2.cs",
-			//			"Microsoft.Rtc.Collaboration.Extensions", "AsyncExtensions");
-
-			//BuildCode(@"C:\Program Files\Microsoft UCMA 4.0\SDK\Core\Bin\Microsoft.Rtc.Collaboration.dll",
-			//			@"D:\temp\async\1.cs",
-			//			"Microsoft.Rtc.Collaboration.Extensions", "AsyncExtensions");
 		}
 
 		private static string GetParameter(string[] args, string name)
@@ -79,6 +65,7 @@ namespace AsyncCodeGenerator
 		private static void WriteInfo()
 		{
 			Console.WriteLine("AsyncCodeGenerator - Task base async code generator");
+			Console.WriteLine("https://github.com/Ne4to/AsyncCodeGenerator");
 			Console.WriteLine();
 
 			Console.WriteLine("Syntax: AsyncCodeGenerator.exe <filePath> [/out:<outFilePath>] [/writeDoc:<yes|no>] [/docFile:<xmlDocFilePath>] [/ns:<ClassNamespace>] [/class:<ClassName>]");
