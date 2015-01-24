@@ -2,6 +2,7 @@ using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -64,6 +65,8 @@ namespace AsyncCodeGenerator
 			classTypeDec.IsClass = true;
 			classTypeDec.TypeAttributes |= TypeAttributes.Public;
 			classTypeDec.Attributes = MemberAttributes.Public;
+
+			classTypeDec.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof (DebuggerStepThroughAttribute))));
 
 			ns.Types.Add(classTypeDec);
 
@@ -144,6 +147,7 @@ namespace AsyncCodeGenerator
 					factoryMethodParameters.Add(exxx);
 
 					var invocation = new CodeMethodInvokeExpression(factoryExpression, "FromAsync", factoryMethodParameters.ToArray());
+					invocation = new CodeMethodInvokeExpression(invocation, "ConfigureAwait", new CodePrimitiveExpression(false));
 					mth.Statements.Add(invocation);
 
 					GetReturnStatement(resultTypeName, mth, endMethod);
@@ -201,7 +205,7 @@ namespace AsyncCodeGenerator
 			var options = new CodeGeneratorOptions
 			{
 				BracingStyle = "C",
-				BlankLinesBetweenMembers = true
+				BlankLinesBetweenMembers = true,				
 			};
 
 			using (var sourceWriter = new StreamWriter(outFile))
