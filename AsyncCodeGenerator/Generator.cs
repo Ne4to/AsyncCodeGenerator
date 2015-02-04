@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
 
@@ -78,7 +79,28 @@ namespace AsyncCodeGenerator
 				var endMethodName = "End" + methodName;
 
 				// ReSharper disable once PossibleNullReferenceException
-				var endMethod = beginMethod.DeclaringType.GetMethod(endMethodName);
+				// var endMethod22 = beginMethod.DeclaringType.GetMethod(endMethodName);
+
+				// TODO choose one right method
+				var endMethods = beginMethod.DeclaringType.GetMethods().Where(m => m.Name == endMethodName).ToArray();
+				if (endMethods.Length == 0)
+					continue;
+
+				if (endMethods.Length > 1)
+				{
+					var warningBuilder = new StringBuilder();
+					warningBuilder.AppendFormat("WARNING: Type '{0}' contains {1} suitable '{2}' methods for the '{3}' method.'\r\n", beginMethod.DeclaringType, endMethods.Length, endMethodName, beginMethod);
+					warningBuilder.AppendLine(" End methods:");
+					foreach (var methodInfo in endMethods)
+					{
+						warningBuilder.AppendFormat("  {0}\r\n", methodInfo);
+					}
+					//warningBuilder.AppendLine();
+
+					classTypeDec.Comments.Add(new CodeCommentStatement(warningBuilder.ToString()));
+				}
+				
+				var endMethod = endMethods[0];
 				if (endMethod == null)
 					continue;
 
@@ -375,7 +397,7 @@ namespace AsyncCodeGenerator
 			var content = File.ReadAllText(fileName);
 			content = content.Replace("class " + className, "static class " + className);
 			content = content.Replace(@"//;", String.Empty);
-			File.WriteAllText(fileName, content);
+			File.WriteAllText(fileName, content, Encoding.UTF8);
 		}
 	}
 }
