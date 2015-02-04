@@ -66,7 +66,10 @@ namespace AsyncCodeGenerator
 		private static void WriteInfo()
 		{
 			Console.WriteLine("AsyncCodeGenerator - Task base async code generator");
-			Console.WriteLine("https://github.com/Ne4to/AsyncCodeGenerator");
+			var toolVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+			Console.WriteLine("Version {0}", toolVersion);
+
+			Console.WriteLine("https://github.com/Ne4to/AsyncCodeGenerator");			
 			Console.WriteLine();
 
 			Console.WriteLine("Syntax: AsyncCodeGenerator.exe <filePath> [/out:<outFilePath>] [/writeDoc:<yes|no>] [/docFile:<xmlDocFilePath>] [/ns:<ClassNamespace>] [/class:<ClassName>]");
