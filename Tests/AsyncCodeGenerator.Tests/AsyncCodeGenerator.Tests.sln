@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCodeGenerator.Tests", "AsyncCodeGenerator.Tests\AsyncCodeGenerator.Tests.csproj", "{36B21F3B-1992-47D8-BC23-304CAD04CDD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{675C1915-1047-4CC7-B836-06DD01951565}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sl", "Sl", "{69D3EA12-E356-436C-A8E7-FE08CC5B9508}"
+	ProjectSection(SolutionItems) = preProject
+		Libs\Silverlight\Microsoft.Lync.Model.dll = Libs\Silverlight\Microsoft.Lync.Model.dll
+		Libs\Silverlight\Microsoft.Lync.Model.xml = Libs\Silverlight\Microsoft.Lync.Model.xml
+		Libs\Silverlight\Microsoft.Lync.Utilities.dll = Libs\Silverlight\Microsoft.Lync.Utilities.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{9F020CA1-C867-4D53-A5B1-47FC1CED5D08}"
+	ProjectSection(SolutionItems) = preProject
+		Libs\Desktop\Microsoft.Lync.Model.dll = Libs\Desktop\Microsoft.Lync.Model.dll
+		Libs\Desktop\Microsoft.Lync.Model.xml = Libs\Desktop\Microsoft.Lync.Model.xml
+		Libs\Desktop\Microsoft.Office.Uc.dll = Libs\Desktop\Microsoft.Office.Uc.dll
+		Libs\Desktop\Microsoft.Rtc.Collaboration.dll = Libs\Desktop\Microsoft.Rtc.Collaboration.dll
+		Libs\Desktop\Microsoft.Rtc.Collaboration.xml = Libs\Desktop\Microsoft.Rtc.Collaboration.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyncDesktop", "LyncDesktop\LyncDesktop.csproj", "{062D07A3-3F2A-4BD5-B3CF-EE8BDD8CE01C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyncSilverlight", "LyncSilverlight\LyncSilverlight.csproj", "{A8F47E98-D805-4F23-8825-30B125534F92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rtc", "Rtc\Rtc.csproj", "{54FE5784-7BBD-4595-BAA7-50D20DF046AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36B21F3B-1992-47D8-BC23-304CAD04CDD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36B21F3B-1992-47D8-BC23-304CAD04CDD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36B21F3B-1992-47D8-BC23-304CAD04CDD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36B21F3B-1992-47D8-BC23-304CAD04CDD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{062D07A3-3F2A-4BD5-B3CF-EE8BDD8CE01C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062D07A3-3F2A-4BD5-B3CF-EE8BDD8CE01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062D07A3-3F2A-4BD5-B3CF-EE8BDD8CE01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062D07A3-3F2A-4BD5-B3CF-EE8BDD8CE01C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8F47E98-D805-4F23-8825-30B125534F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8F47E98-D805-4F23-8825-30B125534F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8F47E98-D805-4F23-8825-30B125534F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8F47E98-D805-4F23-8825-30B125534F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{69D3EA12-E356-436C-A8E7-FE08CC5B9508} = {675C1915-1047-4CC7-B836-06DD01951565}
+		{9F020CA1-C867-4D53-A5B1-47FC1CED5D08} = {675C1915-1047-4CC7-B836-06DD01951565}
+	EndGlobalSection
+EndGlobal

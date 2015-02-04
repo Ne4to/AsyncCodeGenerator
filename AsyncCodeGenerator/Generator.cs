@@ -59,8 +59,9 @@ namespace AsyncCodeGenerator
 			var ns = new CodeNamespace(namespaceName);
 			ns.Comments.Add(new CodeCommentStatement("The file was created by AsyncCodeGenerator."));
 			var toolVersion = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-			ns.Comments.Add(new CodeCommentStatement("Version " + toolVersion));
-			ns.Comments.Add(new CodeCommentStatement("https://github.com/Ne4to/AsyncCodeGenerator"));
+			ns.Comments.Add(new CodeCommentStatement("Version: " + toolVersion));
+			ns.Comments.Add(new CodeCommentStatement("Date: " + DateTimeOffset.UtcNow.ToString("R")));
+			ns.Comments.Add(new CodeCommentStatement("Project page: https://github.com/Ne4to/AsyncCodeGenerator"));
 
 			targetUnit.Namespaces.Add(ns);
 
