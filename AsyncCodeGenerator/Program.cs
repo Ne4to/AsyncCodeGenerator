@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -124,7 +125,10 @@ namespace AsyncCodeGenerator
 				assembly = LoadByRequestingAssemblyLocation(fileName, args.RequestingAssembly);
 
 			if (assembly == null)
-				assembly = LoadSilverlightAssembly(fileName);
+				assembly = LoadSilverlightRuntimeAssembly(fileName);
+
+			if (assembly == null)
+				assembly = LoadSilverlightSdkAssembly(fileName);
 
 			return assembly;
 		}
@@ -155,7 +159,28 @@ namespace AsyncCodeGenerator
 			}
 		}
 
-		private static Assembly LoadSilverlightAssembly(string fileName)
+		private static Assembly LoadSilverlightRuntimeAssembly(string fileName)
+		{
+			var slRootKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Silverlight");
+			if (slRootKey == null)
+				return null;
+
+			var version = slRootKey.GetValue("Version", String.Empty).ToString();
+			if (String.IsNullOrEmpty(version))
+				return null;
+			
+				var assemblyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Microsoft Silverlight", version, fileName);
+			try
+			{
+				return Assembly.ReflectionOnlyLoadFrom(assemblyPath);
+			}
+			catch (FileNotFoundException)
+			{
+				return null;
+			}
+		}
+
+		private static Assembly LoadSilverlightSdkAssembly(string fileName)
 		{
 			var slRootKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Microsoft SDKs\Silverlight");
 			if (slRootKey == null)
