@@ -10,7 +10,7 @@
 
 // The file was created by AsyncCodeGenerator.
 // Version: 1.0.1.0
-// Date: Wed, 04 Feb 2015 13:30:08 GMT
+// Date: Wed, 04 Feb 2015 14:01:16 GMT
 // Project page: https://github.com/Ne4to/AsyncCodeGenerator
 namespace Microsoft.Rtc.Collaboration.Extensions
 {

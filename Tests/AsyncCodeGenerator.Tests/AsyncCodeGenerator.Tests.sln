@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyncSilverlight", "LyncSilv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rtc", "Rtc\Rtc.csproj", "{54FE5784-7BBD-4595-BAA7-50D20DF046AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet", "DotNet\DotNet.csproj", "{43DE8CD5-DC28-430F-B66D-755A61680CDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54FE5784-7BBD-4595-BAA7-50D20DF046AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43DE8CD5-DC28-430F-B66D-755A61680CDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43DE8CD5-DC28-430F-B66D-755A61680CDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43DE8CD5-DC28-430F-B66D-755A61680CDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43DE8CD5-DC28-430F-B66D-755A61680CDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

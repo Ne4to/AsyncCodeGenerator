@@ -48,8 +48,15 @@ namespace AsyncCodeGenerator
 			AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 			AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
 
-			var generator = new Generator(parameters);
-			generator.Build();
+			try
+			{
+				var generator = new Generator(parameters);
+				generator.Build();
+			}
+			catch (BadImageFormatException e)
+			{
+				Console.WriteLine("Failed to load .Net assembly");
+			}
 		}
 
 		private static string GetParameter(string[] args, string name)
